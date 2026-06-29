@@ -1,0 +1,5 @@
+# Signing keys never belong in the repo (provisioned via 1Password / crx-packager).
+key.pem
+*.pem
+*.crx
+*.pub
