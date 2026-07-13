@@ -86,3 +86,7 @@ The component is packaged and signed by
 
 - Component name: `Brave WebMCP Tool Scripts`
 - Component ID: `kddaehjleefhcbmnkdmjnhiphbomedpf`
+
+The signing key (`key.pem`) lives in
+1Password under the **Developers Shared Vault**, item **Brave WebMCP Component
+Key**. Provision it from there when packaging or configuring the publishing job.
