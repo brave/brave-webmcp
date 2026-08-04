@@ -18,6 +18,9 @@ The Brave-side consumer lives in
 
 ```
 scripts/               One .js file per WebMCP tool.
+  avalanche_nz_danger_ratings.js
+  avalanche_nz_recent_observations.js
+  avalanche_nz_region_forecast.js
   gmail_unread_count.js
   example_page_heading.js
 ```
