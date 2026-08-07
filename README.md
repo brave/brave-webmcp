@@ -22,6 +22,8 @@ scripts/               One .js file per WebMCP tool.
   avalanche_nz_recent_observations.js
   avalanche_nz_region_forecast.js
   gmail_unread_count.js
+  goodreads_my_books.js
+  goodreads_search.js
   example_page_heading.js
 ```
 
