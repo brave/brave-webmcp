@@ -16,14 +16,10 @@ The Brave-side consumer lives in
 
 ## Layout
 
-```
-scripts/               One .js file per WebMCP tool.
-  avalanche_nz_danger_ratings.js
-  avalanche_nz_recent_observations.js
-  avalanche_nz_region_forecast.js
-  gmail_unread_count.js
-  example_page_heading.js
-```
+`scripts/` holds one `.js` file per WebMCP tool, named `<site>_<tool>.js` —
+`avalanche_nz_region_forecast.js`, `newworld_nz_search_catalog.js`. The site
+prefix only disambiguates the filename; it is deliberately absent from `@name`,
+which the site's `@match` already implies.
 
 The component `manifest.json` (name, version, public key) is **not** kept here.
 It is owned by
