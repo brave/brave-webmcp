@@ -52,27 +52,28 @@ const BLOCKERS = {
   AUTHENTICATION_REQUIRED: 'the shopper needs to sign in',
 };
 
+// This route exchanges the HttpOnly session cookies for a short-lived bearer
+// token, and provisions an anonymous session when there is no session at all,
+// so it covers a first-time visitor on its own. There is deliberately no
+// fallback to /next/api/user/login/guest: that mints a *new* session and
+// rewrites refresh_token, so reaching for it when this call fails transiently
+// would sign a logged-in shopper out and strand the cart they had going.
 const getSession = async () => {
-  const routes = [
-    '/next/api/user/get-current-user',
-    '/next/api/user/login/guest',
-  ];
-  for (let i = 0; i < routes.length; i += 1) {
-    const response = await fetch(routes[i], {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: '{}',
-    });
-    if (!response.ok) {
-      continue;
-    }
-    const data = await response.json().catch(() => null);
-    if (data && data.access_token) {
-      return data.access_token;
-    }
+  const response = await fetch('/next/api/user/get-current-user', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: '{}',
+  });
+  if (!response.ok) {
+    throw new Error('the site would not issue a session token (HTTP ' +
+      response.status + ')');
   }
-  throw new Error('could not obtain a newworld.co.nz session token');
+  const data = await response.json().catch(() => null);
+  if (!data || !data.access_token) {
+    throw new Error('the site returned no session token');
+  }
+  return data.access_token;
 };
 
 // The token is a plain JWT whose payload carries the account's roles, so who is
@@ -97,6 +98,9 @@ const identity = (token) => {
 
 const money = (cents) => '$' + (Number(cents || 0) / 100).toFixed(2);
 
+// WEIGHT lines are ordered in whole grams. The Number round-trip drops the
+// trailing zeros toFixed adds without touching significant ones, so 10000g
+// reads as 10kg rather than 1kg.
 const quantityText = (line) => {
   if (line.sale_type !== 'WEIGHT') {
     return 'x' + line.quantity;
